@@ -1,0 +1,92 @@
+/* Colors */
+:root {
+    --primary-color: #d62f2f;
+    --secondary-color: #32383e;
+    --text-color: #32383e;
+    --border-color: #d1d1d1;
+    --bg-color: #f7f7f7;
+  }
+  
+  /* Fonts */
+  body {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background-color: var(--secondary-color);
+    color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .nav-link {
+    font-size: 18px;
+  }
+  
+  /* Card */
+  .card {
+    border: none;
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.2s ease-in-out;
+    margin-bottom: 20px;
+  }
+  
+  .card:hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .card-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--text-color);
+  }
+  
+  .card-text {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+  }
+  
+  .btn {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .btn:hover {
+    background-color: #c32929;
+    border-color: #c32929;
+  }
+  
+  .btn-primary {
+    color: var(--bg-color);
+    font-weight: bold;
+  }
+  
+  /* Footer */
+  footer {
+    background-color: var(--secondary-color);
+    color: var(--bg-color);
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+    border-top: 1px solid var(--border-color);
+  }
+  
