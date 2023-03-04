@@ -1,0 +1,22 @@
+# .air.toml
+
+# set the port that air will use to serve your application
+[http]
+port = 8080
+
+# set the root directory of your project
+# (relative to this config file)
+root = "."
+
+# set the build command
+[build]
+cmd = "go run cmd/viralvault/main.go"
+
+#exclude directory
+exclude_dir = ["./client"]
+
+# set the watcher
+[watcher]
+paths = ["./api"]
+extenstions = ["go", "mod"]
+delay = 1000
