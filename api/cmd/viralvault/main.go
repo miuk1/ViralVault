@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"viralvault/internal/routes"
 	"viralvault/models"
 
 	"github.com/gin-gonic/gin"
@@ -19,33 +20,15 @@ func main() {
 	defer db.Close()
 
 	//Migrate the schema
+	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.VulnerableMachine{})
 	db.AutoMigrate(&models.Vulnerability{})
 
 	//Create a new router using the Gin web framework
 	r := gin.Default()
 
-	//API endpoint that retrieves a list of all vulnerable machines
-	r.GET("/api/vulnerable-machines", func(ctx *gin.Context) {
-		var machines []models.VulnerableMachine
-		if err := db.Preload("Vulnerabilities").Find(&machines).Error; err != nil {
-			ctx.AbortWithStatus(500)
-			log.Fatal(err)
-		} else {
-			ctx.JSON(200, machines)
-		}
-	})
-
-	//API endpoint that retreives a specific vulnerable machine
-	r.GET("/api/vulnerable-machines/:id", func(ctx *gin.Context) {
-		var machine models.VulnerableMachine
-		id := ctx.Param("id")
-		if err := db.Preload("Vulnerabilities").First(&machine, id).Error; err != nil {
-			ctx.AbortWithStatus(404)
-		} else {
-			ctx.JSON(200, machine)
-		}
-	})
+	//Setup routes
+	routes.SetupRoutes(db, r)
 
 	//Start the server
 	if err := r.Run(":8000"); err != nil {

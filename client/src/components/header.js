@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import logo from '../logo.png';
+import '../style/header.css';
 
 function Header() {
   return (
@@ -9,15 +10,15 @@ function Header() {
         <Navbar.Brand href="/">
           <img
             src={logo}
-            height="30"
+            height="40"
             className="d-inline-block align-top"
             alt="ViralVault logo"
           />
-          ViralVault
+          <span className="ms-3 align-middle">ViralVault</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="ms-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/about">About</Nav.Link>
           </Nav>
