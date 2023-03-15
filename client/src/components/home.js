@@ -19,6 +19,7 @@ const HomePage = () => {
 
             {/* Features Section */}
             <section className="features-section py-5">
+            <h1 className="text-center mb-4">Features</h1>
                 <div className="container">
                     <div className="row">
                         <div className="col-md-4">

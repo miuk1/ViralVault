@@ -1,27 +1,30 @@
 import React from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import logo from '../logo.png';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import logo from '../logo-nav.png';
 import '../style/header.css';
 
 function Header() {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg" className="sticky-top">
       <Container>
-        <Navbar.Brand href="/">
-          <img
-            src={logo}
-            height="40"
-            className="d-inline-block align-top"
-            alt="ViralVault logo"
-          />
-          <span className="ms-3 align-middle">ViralVault</span>
-        </Navbar.Brand>
+        <div class="d-flex align-items-center">
+          <Navbar.Brand href="/" className="d-flex align-items-center">
+            <img
+              src={logo}
+              width="60"
+              height="60"
+              className="d-inline-block align-top"
+              alt="ViralVault logo"
+            />{' '}
+            <span className="ms-2">ViralVault</span> 
+          </Navbar.Brand>
+        </div>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/about">About</Nav.Link>
-          </Nav>
+        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+            <Nav>
+            <Button variant="outline-primary" href="/signin" className="nav-link">Sign In</Button>
+              <Nav.Link href="/about">About</Nav.Link>
+            </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
