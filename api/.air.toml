@@ -20,3 +20,17 @@ exclude_dir = ["./client"]
 paths = ["./api"]
 extenstions = ["go", "mod"]
 delay = 1000
+
+
+# set the logger
+[logger]
+level = "info"
+output = "air.log"
+
+# set the color theme
+[theme]
+name = "solarized-dark"
+
+# delete tmp files on exit
+[misc]
+clean_on_exit = true

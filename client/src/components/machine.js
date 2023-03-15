@@ -8,7 +8,12 @@ function VulnerableMachines() {
 
   // Fetch vulnerable machines from API on component mount
   useEffect(() => {
-    fetch("http://localhost:8000/api/vulnerable-machines")
+    fetch("http://localhost:8000/api/vulnerable-machines", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
       .then((response) => response.json())
       .then((data) => setMachines(data))
       .catch((error) => console.log(error));
