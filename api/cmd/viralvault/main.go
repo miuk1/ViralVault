@@ -2,19 +2,38 @@ package main
 
 import (
 	"log"
-
-	"viralvault/internal/routes"
-	"viralvault/models"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/joho/godotenv"
+
+	"viralvault/internal/routes"
+	"viralvault/models"
 )
 
 func main() {
+
+	//Load environment variables
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	//Get database environment variables
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+
+	//Create the database connection string and log it
+	dbURI := "host=" + dbHost + " port=" + dbPort + " user=" + dbUser + " dbname=" + dbName + " password=" + dbPassword + " sslmode=disable"
+
 	//Connect to the database
-	db, err := gorm.Open("postgres", "host=0.0.0.0 port=5432 user=myusername dbname=mydatabase password=mypassword sslmode=disable")
+	db, err := gorm.Open("postgres", dbURI)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,12 +47,12 @@ func main() {
 	//Create a new router using the Gin web framework
 	r := gin.Default()
 
-	//Set trusted origins
-	r.SetTrustedProxies([]string{"127.0.0.1/8"})
+	//Set trusted proxies
+	r.SetTrustedProxies([]string{os.Getenv("APP_URL")})
 
 	//Configure CORS middleware
 	c := cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000"},
+		AllowOrigins: []string{os.Getenv("APP_URL")},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
 		AllowHeaders: []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 	})
@@ -42,7 +61,7 @@ func main() {
 	//Check for preflight requests and return 204
 	r.Use(func(ctx *gin.Context) {
 		if ctx.Request.Method == "OPTIONS" {
-			ctx.Header("Access-Control-Allow-Origin", "http://localhost:3000")
+			ctx.Header("Access-Control-Allow-Origin", os.Getenv("APP_URL"))
 			ctx.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 			ctx.Header("Access-Control-Allow-Headers", "Authorization, Content-Type")
 			ctx.AbortWithStatus(204)

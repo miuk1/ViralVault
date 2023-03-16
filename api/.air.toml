@@ -10,7 +10,7 @@ root = "."
 
 # set the build command
 [build]
-cmd = "go run cmd/viralvault/main.go"
+cmd = "go test -v ./tests/... && go run cmd/viralvault/main.go"
 
 #exclude directory
 exclude_dir = ["./client"]
