@@ -3,22 +3,42 @@ package tests
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
+
 	"viralvault/internal/routes"
 	"viralvault/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
 
 // setupTestDB sets up a mock database for testing
 func setupTestDB() (*gorm.DB, error) {
+	// load environment variables from .env file
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file for testing")
+	}
+
+	// get test database environment variables
+	dbHost := os.Getenv("TEST_DB_HOST")
+	dbPort := os.Getenv("TEST_DB_PORT")
+	dbUser := os.Getenv("TEST_DB_USER")
+	dbPassword := os.Getenv("TEST_DB_PASSWORD")
+	dbName := os.Getenv("TEST_DB_NAME")
+
+	// create the database connection string
+	dbURI := "host=" + dbHost + " port=" + dbPort + " user=" + dbUser + " dbname=" + dbName + " password=" + dbPassword + " sslmode=disable"
+
 	// create a new database instance for testing
-	db, err := gorm.Open("postgres", "host=0.0.0.0 port=5432 user=myusername dbname=viralvault_test password=mypassword sslmode=disable")
+	db, err := gorm.Open("postgres", dbURI)
 
 	if err != nil {
 		return nil, err
@@ -27,6 +47,7 @@ func setupTestDB() (*gorm.DB, error) {
 	// migrate the database schema
 	db.AutoMigrate(&models.VulnerableMachine{})
 	db.AutoMigrate(&models.Vulnerability{})
+	db.AutoMigrate(&models.User{})
 
 	return db, nil
 }
@@ -35,7 +56,12 @@ func setupTestDB() (*gorm.DB, error) {
 func TestGetVulnerableMachines(t *testing.T) {
 	//Set the gin to test mode and setup a mock database
 	gin.SetMode(gin.TestMode)
-	db, _ := setupTestDB()
+	db, err := setupTestDB()
+
+	// Check for database connection error
+	if err != nil {
+		t.Fatal("Error connecting to database: ", err)
+	}
 
 	//Initialize a new router
 	r := gin.Default()
@@ -60,9 +86,9 @@ func TestGetVulnerableMachines(t *testing.T) {
 
 	//Check the response body
 	var machines []models.VulnerableMachine
-	err := json.Unmarshal([]byte(rr.Body.Bytes()), &machines)
-	if err != nil {
-		t.Fatal(err)
+	errJsonRes := json.Unmarshal([]byte(rr.Body.Bytes()), &machines)
+	if errJsonRes != nil {
+		t.Fatal("Error getting Json response: ", errJsonRes)
 	}
 
 	// Assert that the response status code is 200 OK

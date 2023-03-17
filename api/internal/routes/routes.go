@@ -2,8 +2,8 @@
 package routes
 
 import (
-	"log"
-	"viralvault/models"
+	"viralvault/internal/handlers"
+	"viralvault/internal/repositories"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -11,25 +11,15 @@ import (
 
 // setup routes
 func SetupRoutes(db *gorm.DB, r *gin.Engine) {
-	//API endpoint that retrieves a list of all vulnerable machines
-	r.GET("/api/vulnerable-machines", func(ctx *gin.Context) {
-		var machines []models.VulnerableMachine
-		if err := db.Preload("Vulnerabilities").Find(&machines).Error; err != nil {
-			ctx.AbortWithStatus(500)
-			log.Fatal(err)
-		} else {
-			ctx.JSON(200, machines)
-		}
-	})
+	// create a new repository instance
+	vulenrableMachineRepo := repositories.NewVulenerableMachineRepository(db)
 
-	//API endpoint that retreives a specific vulnerable machine
-	r.GET("/api/vulnerable-machines/:id", func(ctx *gin.Context) {
-		var machine models.VulnerableMachine
-		id := ctx.Param("id")
-		if err := db.Preload("Vulnerabilities").First(&machine, id).Error; err != nil {
-			ctx.AbortWithStatus(404)
-		} else {
-			ctx.JSON(200, machine)
-		}
-	})
+	// create a new instance of the VulenerableMachineHandler
+	vulenerableMachineHandler := handlers.NewVulenerableMachineHandler(vulenrableMachineRepo)
+
+	// API endpoint that retrieves a list of all vulnerable machines
+	r.GET("/api/vulnerable-machines", vulenerableMachineHandler.GetVulnerableMachines)
+
+	// API endpoint that retrieves a specific vulnerable machine
+	r.GET("/api/vulnerable-machines/:id", vulenerableMachineHandler.GetVulnerableMachine)
 }
